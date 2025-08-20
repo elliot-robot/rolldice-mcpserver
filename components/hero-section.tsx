@@ -7,10 +7,10 @@ export function HeroSection() {
         ✨ MCP Server Ready
       </Badge>
       <h2 className="text-4xl font-bold mb-4">
-        Add Dice Rolling to Claude Desktop
+        Add Dice & Cards to Claude Desktop
       </h2>
       <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-        A powerful Model Context Protocol server that lets you roll dice of any size directly within Claude Desktop conversations.
+        A powerful Model Context Protocol server that lets you roll dice and draw playing cards directly within Claude Desktop conversations.
       </p>
     </div>
   )

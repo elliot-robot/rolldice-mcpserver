@@ -1,12 +1,13 @@
-# 🎲 Roll Dice MCP Server
+# 🎲🃏 Dice & Cards MCP Server
 
-A beautiful web application and Model Context Protocol (MCP) server that brings dice rolling functionality directly to Claude Desktop. Built with Next.js, shadcn/ui, and the MCP Handler library with server actions for seamless web testing.
+A beautiful web application and Model Context Protocol (MCP) server that brings dice rolling and card drawing functionality directly to Claude Desktop. Built with Next.js, shadcn/ui, and the MCP Handler library with server actions for seamless web testing.
 
-![Roll Dice MCP Server](https://via.placeholder.com/800x400/0f0f0f/ffffff?text=Roll+Dice+MCP+Server)
+![Dice & Cards MCP Server](https://via.placeholder.com/800x400/0f0f0f/ffffff?text=Dice+%26+Cards+MCP+Server)
 
 ## ✨ Features
 
 - 🎲 **Roll Any Dice**: Support for any number of sides (minimum 2) - d4, d6, d20, d100, or custom
+- 🃏 **Draw Playing Cards**: Full 52-card deck with drawing, shuffling, and card information
 - 🌐 **Beautiful Web Interface**: Modern, responsive UI with detailed setup instructions
 - 🔄 **Server Actions Integration**: Web interface uses the same logic as the MCP server
 - 🌙 **Dark/Light Mode**: Toggle between themes with dark mode as default
@@ -97,8 +98,9 @@ Web Interface → Server Actions → Shared Dice Logic (/lib/dice.ts)
 ### Key Components
 
 - **`lib/dice.ts`**: Shared dice rolling logic, schema, and tool definitions
+- **`lib/cards.ts`**: Shared card deck logic, schema, and tool definitions
 - **`app/api/[transport]/route.ts`**: MCP server endpoint using mcp-handler + shared logic
-- **`app/actions/mcp-actions.ts`**: Server actions that use the shared dice logic
+- **`app/actions/mcp-actions.ts`**: Server actions that use the shared game logic
 - **`app/page.tsx`**: Beautiful web interface with setup instructions and testing
 - **`components/`**: Reusable shadcn/ui components for the interface
 
@@ -106,11 +108,11 @@ Web Interface → Server Actions → Shared Dice Logic (/lib/dice.ts)
 
 The web interface uses **Next.js Server Actions** that import the same shared logic as the MCP server:
 - ✅ Same Zod schema validation (`lib/dice.ts`)
-- ✅ Identical randomness algorithm (single `rollDice()` function)
-- ✅ Consistent output formatting (same result structure)
-- ✅ Shared tool definitions (same name, description, schema)
+- ✅ Identical randomness algorithms (shared functions for dice and cards)
+- ✅ Consistent output formatting (same result structures)
+- ✅ Shared tool definitions (same names, descriptions, schemas)
 - ✅ True single source of truth architecture
-- **MCP Tools**: `roll_dice` tool with Zod validation for parameters
+- **MCP Tools**: `roll_dice`, `draw_card`, `draw_cards`, `shuffle_deck`, and `card_info` tools with Zod validation
 
 ## 🚀 Deployment to Vercel
 

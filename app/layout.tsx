@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Roll Dice MCP Server",
-  description: "A Model Context Protocol server for rolling dice, compatible with Claude Desktop",
+  title: "Dice & Cards MCP Server",
+  description: "A Model Context Protocol server for rolling dice and drawing cards, compatible with Claude Desktop",
 };
 
 export default function RootLayout({

@@ -29,7 +29,7 @@ export default function Home() {
             </TabsTrigger>
             <TabsTrigger value="test" className="flex items-center space-x-2">
               <Dice1 className="h-4 w-4" />
-              <span>Test Server</span>
+              <span>Test Server Temp </span>
             </TabsTrigger>
             <TabsTrigger value="usage" className="flex items-center space-x-2">
               <Play className="h-4 w-4" />

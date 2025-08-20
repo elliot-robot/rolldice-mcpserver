@@ -1,0 +1,106 @@
+"use client"
+
+import { useState } from "react"
+import { Card as UICard, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card"
+import { Button } from "./ui/button"
+import { Separator } from "./ui/separator"
+import { Input } from "./ui/input"
+import { type Card } from "@/lib/deck"
+
+export function TestDeckServer() {
+  const [deck, setDeck] = useState<Card[]>([])
+  const [drawn, setDrawn] = useState<Card[]>([])
+  const [drawCount, setDrawCount] = useState(1)
+  const [numDecks, setNumDecks] = useState(1)
+  const [error, setError] = useState<string | null>(null)
+
+  const shuffleDeck = async () => {
+    setError(null)
+    setDrawn([])
+    const res = await fetch("/api/deck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "shuffle", numDecks })
+    });
+    const data = await res.json();
+    if (data.success) {
+      setDeck(data.deck)
+    } else {
+      setError(data.error || "Failed to shuffle deck")
+    }
+  }
+
+  const drawCards = async () => {
+    setError(null)
+    if (deck.length === 0) {
+      setError("Shuffle the deck first!")
+      return
+    }
+    const res = await fetch("/api/deck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "draw", deck, count: drawCount })
+    })
+    const data = await res.json()
+    if (data.success) {
+      setDrawn(data.drawn)
+      setDeck(data.remaining)
+    } else {
+      setError(data.error || "Failed to draw cards")
+    }
+  }
+
+  return (
+    <UICard>
+      <CardHeader>
+        <CardTitle>Deck of Cards Server</CardTitle>
+        <CardDescription>Shuffle and draw cards from one or more decks using the server API.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex items-center space-x-2">
+            <span>Decks:</span>
+            <Input
+              type="number"
+              min={1}
+              max={8}
+              value={numDecks}
+              onChange={e => setNumDecks(Math.max(1, Math.min(8, Number(e.target.value))))}
+              className="w-16"
+            />
+            <Button onClick={shuffleDeck}>Shuffle Deck{numDecks > 1 ? 's' : ''}</Button>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span>Draw:</span>
+            <Input
+              type="number"
+              min={1}
+              max={deck.length}
+              value={drawCount}
+              onChange={e => setDrawCount(Math.max(1, Math.min(deck.length, Number(e.target.value))))}
+              className="w-16"
+              disabled={deck.length === 0}
+            />
+            <Button onClick={drawCards} disabled={deck.length === 0}>Draw</Button>
+          </div>
+        </div>
+        <Separator />
+        {error && <div className="text-red-600">{error}</div>}
+        <div>
+          <strong>Drawn Cards:</strong>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {drawn.map((card, i) => (
+              <span key={i} className="border rounded px-2 py-1 bg-gray-100 dark:bg-gray-800">
+                {card.rank} of {card.suit}
+              </span>
+            ))}
+            {drawn.length === 0 && <span className="text-muted-foreground">None</span>}
+          </div>
+        </div>
+        <div>
+          <strong>Cards Left in Deck:</strong> {deck.length}
+        </div>
+      </CardContent>
+    </UICard>
+  )
+}

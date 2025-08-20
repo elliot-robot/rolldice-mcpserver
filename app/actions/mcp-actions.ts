@@ -1,6 +1,8 @@
 'use server'
 
 import { rollDice as rollDiceCore, rollDiceTool } from "@/lib/dice"
+import { createDeck, shuffleDeck, drawCards, Card } from "@/lib/deck"
+import { z } from "zod"
 
 // Server action that uses the shared dice rolling logic
 export async function rollDice(sides: number) {
@@ -24,6 +26,51 @@ export async function rollDice(sides: number) {
   }
 }
 
+// Server action for shuffling a deck
+export async function shuffleDeckAction() {
+  try {
+    const deck = shuffleDeck(createDeck())
+    return {
+      success: true,
+      result: {
+        content: [deck]
+      }
+    }
+  } catch {
+    return {
+      success: false,
+      error: {
+        code: -32602,
+        message: 'Failed to shuffle deck'
+      }
+    }
+  }
+}
+
+// Server action for drawing cards from a deck
+export async function drawCardsAction(deck: Card[], count: number) {
+  try {
+    if (!Array.isArray(deck) || typeof count !== 'number' || count < 1) {
+      throw new Error('Invalid parameters')
+    }
+    const { drawn, remaining } = drawCards(deck, count)
+    return {
+      success: true,
+      result: {
+        content: [{ drawn, remaining }]
+      }
+    }
+  } catch {
+    return {
+      success: false,
+      error: {
+        code: -32602,
+        message: 'Invalid parameters: must provide a deck and count >= 1'
+      }
+    }
+  }
+}
+
 export async function listTools() {
   return {
     success: true,
@@ -42,6 +89,42 @@ export async function listTools() {
               }
             },
             required: ['sides']
+          }
+        },
+        {
+          name: 'shuffle_deck',
+          description: 'Shuffles a standard deck of 52 playing cards',
+          inputSchema: {
+            type: 'object',
+            properties: {},
+            required: []
+          }
+        },
+        {
+          name: 'draw_cards',
+          description: 'Draws N cards from a given deck',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              deck: {
+                type: 'array',
+                description: 'The deck to draw from (array of cards)',
+                items: {
+                  type: 'object',
+                  properties: {
+                    suit: { type: 'string' },
+                    rank: { type: 'string' }
+                  },
+                  required: ['suit', 'rank']
+                }
+              },
+              count: {
+                type: 'number',
+                description: 'Number of cards to draw',
+                minimum: 1
+              }
+            },
+            required: ['deck', 'count']
           }
         }
       ]

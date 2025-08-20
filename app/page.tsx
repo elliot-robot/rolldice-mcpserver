@@ -6,6 +6,7 @@ import { Header } from "@/components/header"
 import { HeroSection } from "@/components/hero-section"
 import { SetupGuide } from "@/components/setup-guide"
 import { TestDiceRoller } from "@/components/test-dice-roller"
+import { TestDeckServer } from "@/components/test-deck-server"
 import { McpProtocolInfo } from "@/components/mcp-protocol-info"
 import { UsageGuide } from "@/components/usage-guide"
 import { AboutSection } from "@/components/about-section"
@@ -47,6 +48,7 @@ export default function Home() {
           <TabsContent value="test" className="space-y-6">
             <McpProtocolInfo />
             <TestDiceRoller />
+            <TestDeckServer />
           </TabsContent>
 
           <TabsContent value="usage" className="space-y-6">
